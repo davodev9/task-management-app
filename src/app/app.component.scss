@@ -1,0 +1,18 @@
+.grid {
+  min-height: calc(85vh - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.layout-footer {
+  transition: margin-left .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--surface-border);
+  min-height: 60px;
+  width: 100%;
+  position: relative;
+}

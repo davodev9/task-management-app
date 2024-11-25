@@ -1,0 +1,69 @@
+<div class="card flex justify-content-center" [formGroup]="formTask">
+  <p-dialog header="Header" [(visible)]="showFormtask" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false"
+    [resizable]="false" (onShow)="initDialog()">
+    <ng-template pTemplate="header" class="flex align-items-center justify-content-end">
+      <span class="text-xl font-bold">{{task.title === '' ? 'Create task' : 'Edit task'}}</span>
+    </ng-template>
+    <p-card>
+      <div class="card p-fluid flex flex-wrap gap-3">
+        <div class="flex-auto">
+          <span class="font-bold block mb-2">Title<i class="pi pi-info-circle" pTooltip="Title task"></i></span>
+          <input pInputText id="title" maxlength="250" formControlName="title"
+            [ngClass]="{ 'invalid-field': formTask.get('title').invalid && (formTask.get('title').dirty || formTask.get('title').touched) }" />
+        </div>
+        <div class="flex-auto">
+          <span class="font-bold block mb-2">Due date<i class="pi pi-info-circle" pTooltip="Due date task"></i></span>
+          <p-calendar formControlName="dueDate"
+            [ngClass]="{ 'invalid-field': formTask.get('dueDate').invalid && (formTask.get('dueDate').dirty || formTask.get('dueDate').touched) }"
+            [dateFormat]="'yy-mm-dd'"></p-calendar>
+        </div>
+        <div *ngIf="editMode" class="flex-auto">
+          <span class="font-bold block mb-2">State<i class="pi pi-info-circle" pTooltip="State task"></i></span>
+          <p-dropdown
+            formControlName="state"
+            inputId="state" [options]="states$.value" placeholder=States
+            optionLabel="name" [required]="true">
+      </p-dropdown>
+        </div>
+      </div>
+      <div class="card p-fluid flex flex-wrap gap-3">
+        <div class="flex-auto">
+          <span class="font-bold block mb-2">Description<i class="pi pi-info-circle"
+              pTooltip="Description task"></i></span>
+          <input pInputText id="description" maxlength="250" formControlName="description"
+            [ngClass]="{ 'invalid-field': formTask.get('description').invalid && (formTask.get('description').dirty || formTask.get('description').touched) }" />
+        </div>
+      </div>
+    </p-card>
+    <br>
+    <p-card>
+      <p-table id="tblTask" [value]="notes" [scrollable]="true" scrollHeight="600px">
+        <ng-template pTemplate="header" class="dataTable-header">
+          <tr>
+            <th scope="col">Note</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-start">
+            <div class="flex-auto">
+              <span class="font-bold block mb-2">Note<i class="pi pi-info-circle" pTooltip="Notes for task"></i></span>
+              <input pInputText id="note" [(ngModel)]="note" [ngModelOptions]="{standalone: true}" />&nbsp;
+              <p-button label="Add note" (onClick)="addNote()" [disabled]="note === ''" icon="pi pi-plus-circle"
+                iconPos="left" styleClass="p-button-primary p-button-rounded boton-icono"></p-button>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="body" let-note let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ note }}</td>
+        </ng-template>
+      </p-table>
+    </p-card>
+    <ng-template pTemplate="footer">
+      <p-button label="Save" (onClick)="addTask()" icon="pi pi-check-circle" iconPos="left" [disabled]="formTask.invalid"
+        styleClass="p-button-primary p-button-rounded boton-icono"></p-button>&nbsp;
+      <p-button label="Cancel" (onClick)="cancelProcess()" icon="pi pi-times-circle"
+        styleClass="p-button-danger p-button-rounded" iconPos="left"></p-button>
+    </ng-template>
+  </p-dialog>
+</div>

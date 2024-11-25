@@ -1,0 +1,61 @@
+<p-card styleClass="dataTable-overflowed">
+  <ng-template pTemplate="header">
+    <div class="header-content">
+      <!-- <span class="header-text">Task list to management</span> -->
+      <img src="../../../assets/img/logo-emi-falck_1.png" alt="image" class="header-image" />
+    </div>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <div style="overflow:auto; width:100%;" class="invisible-scrollbar">
+      <p-table id="tblTask" [value]="paginatedTasks" [scrollable]="true" scrollHeight="600px">
+
+        <ng-template pTemplate="header" class="dataTable-header">
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Due date</th>
+            <th scope="col">Completed</th>
+            <th scope="col">State</th>
+            <th scope="col">Notes</th>
+            <th scope="col" style="width:200px;">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-end">
+            <p-button label="Add task" icon="pi pi-plus-circle" iconPos="left" (onClick)="openModalFormTask(undefined)"
+              styleClass="p-button-primary p-button-rounded"></p-button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.dueDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ task.completed ? 'Yes' : 'No' }}</td>
+            <td>{{ getMostRecentState(task.stateHistory)?.state || 'N/A' }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let note of task.notes">{{ note }}</li>
+              </ul>
+            </td>
+            <td>
+              <p-button icon="pi pi-pencil" iconPos="left" styleClass="p-button-rounded" (onClick)="openModalFormTask(task)"></p-button>&nbsp;
+              <p-button icon="pi pi-trash" iconPos="left" styleClass="p-button-rounded p-button-danger"
+                (click)="confirmDeleteTask(task)"></p-button>&nbsp;
+              <p-button icon="pi pi-check-circle" [disabled]="task.completed" iconPos="left"
+                styleClass="p-button-rounded p-button-success" (click)="markAsCompleted(task)"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="flex justify-content-between align-items-center mt-3">
+      <p-button label="Previous" styleClass="p-button-primary p-button-rounded boton-icono"
+        [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)"></p-button>
+      <span>Page {{ currentPage }}</span>
+      <p-button label="Next" styleClass="p-button-primary p-button-rounded boton-icono"
+        [disabled]="paginatedTasks.length < tasksPerPage" (click)="changePage(currentPage + 1)"></p-button>
+    </div>
+  </ng-template>
+</p-card>
+<app-task-form *ngIf="showFormtask" [task]="task" [showFormtask]="showFormtask" [editMode]="editMode" (messageEvent)="updateTaskList($event)"></app-task-form>
